@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - E-Waste Management System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            line-height: 1.6;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2d5a27 0%, #4a7c59 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(45, 90, 39, 0.3);
+        }
+
+        .header-left h1 {
+            font-size: 26px;
+            margin-bottom: 8px;
+        }
+
+        .header-left p {
+            opacity: 0.9;
+            font-size: 15px;
+        }
+
+        .company-badge {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-top: 5px;
+            display: inline-block;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-info h3 {
+            font-size: 18px;
+            margin-bottom: 3px;
+        }
+
+        .user-info span {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .stars {
+            color: #ffd700;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 28px;
+        }
+
+        .stat-icon.available { background: linear-gradient(135deg, #4caf50, #8bc34a); color: white; }
+        .stat-icon.bids { background: linear-gradient(135deg, #2196f3, #64b5f6); color: white; }
+        .stat-icon.pending { background: linear-gradient(135deg, #ff9800, #ffb74d); color: white; }
+        .stat-icon.accepted { background: linear-gradient(135deg, #9c27b0, #ba68c8); color: white; }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .content-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: #f8fafc;
+            padding: 20px 25px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-header h3 {
+            color: #333;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .badge {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .section-content {
+            padding: 25px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 10px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: white;
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #4a7c59;
+            box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.1);
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px 10px 45px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #4a7c59;
+            box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .item-card {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .item-card:hover {
+            border-color: #4a7c59;
+            box-shadow: 0 4px 15px rgba(74, 124, 89, 0.1);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .item-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .item-id {
+            font-size: 12px;
+            color: #666;
+            font-family: monospace;
+        }
+
+        .item-status {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .item-details {
+            margin-bottom: 15px;
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .item-row strong {
+            color: #333;
+        }
+
+        .item-row span {
+            color: #666;
+        }
+
+        .hazard-low { color: #4caf50; }
+        .hazard-medium { color: #ff9800; }
+        .hazard-high { color: #f44336; }
+
+        .item-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2d5a27, #4a7c59);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 90, 39, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #4a7c59;
+            border: 2px solid #4a7c59;
+        }
+
+        .btn-outline:hover {
+            background: #4a7c59;
+            color: white;
+        }
+
+        .sidebar {
+            display: grid;
+            gap: 25px;
+        }
+
+        .recent-bids {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .bid-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.3s ease;
+        }
+
+        .bid-item:hover {
+            background: #f8fafc;
+        }
+
+        .bid-item:last-child {
+            border-bottom: none;
+        }
+
+        .bid-info h4 {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .bid-info p {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .bid-amount {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2d5a27;
+        }
+
+        .bid-status {
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-accepted {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 50px;
+            color: #666;
+        }
+
+        .loading i {
+            margin-right: 10px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            color: #f44336;
+            background: #ffebee;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 15px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <h1>Welcome, <%= recycler.company_name %></h1>
+                <p>Contact: <%= recycler.contact_person %> | License: <%= recycler.license_number %></p>
+                <div class="company-badge">
+                    <i class="fas fa-certificate"></i> 
+                    <%= recycler.is_verified ? 'Verified Recycler' : 'Pending Verification' %>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <h3><%= recycler.contact_person %></h3>
+                    <span><%= recycler.email %></span>
+                    <div class="rating">
+                        <span class="stars">
+                            <% for(let i = 1; i <= 5; i++) { %>
+                                <% if(i <= Math.floor(parseFloat(recycler.rating || 0))) { %>
+                                    <i class="fas fa-star"></i>
+                                <% } else if(i <= Math.ceil(parseFloat(recycler.rating || 0))) { %>
+                                    <i class="fas fa-star-half-alt"></i>
+                                <% } else { %>
+                                    <i class="far fa-star"></i>
+                                <% } %>
+                            <% } %>
+                        </span>
+                        <span>(<%= parseFloat(recycler.rating || 0).toFixed(1) %>)</span>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="handleLogout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon available">
+                    <i class="fas fa-recycle"></i>
+                </div>
+                <div class="stat-number" id="availableItemsCount"><%= stats.availableItems %></div>
+                <div class="stat-label">Available Items</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon bids">
+                    <i class="fas fa-gavel"></i>
+                </div>
+                <div class="stat-number" id="totalBidsCount"><%= stats.totalBids %></div>
+                <div class="stat-label">Total Bids</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon pending">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-number" id="pendingBidsCount"><%= stats.pendingBids %></div>
+                <div class="stat-label">Pending Bids</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon accepted">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <div class="stat-number" id="acceptedBidsCount"><%= stats.acceptedBids %></div>
+                <div class="stat-label">Accepted Bids</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Available E-waste Items -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h3>Available E-waste Items</h3>
+                    <span class="badge" id="itemCount"><%= items.length %> items</span>
+                </div>
+                <div class="section-content">
+                    <!-- Filters -->
+                    <div class="filters">
+                        <select class="filter-select" id="categoryFilter">
+                            <option value="">All Categories</option>
+                            <% categories.forEach(category => { %>
+                                <option value="<%= category %>"><%= category %></option>
+                            <% }); %>
+                        </select>
+                        <select class="filter-select" id="hazardFilter">
+                            <option value="">All Hazard Levels</option>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="Search items by type, serial number...">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+
+                    <!-- Items Grid -->
+                    <div class="items-grid" id="itemsGrid">
+                        <% if (items && items.length > 0) { %>
+                            <% items.forEach(item => { %>
+                                <div class="item-card" data-category="<%= item.category %>" data-hazard="<%= item.hazard %>" data-search="<%= item.type %> <%= item.serial_no %> <%= item.category %>">
+                                    <div class="item-header">
+                                        <div>
+                                            <div class="item-title"><%= item.type %> - <%= item.category %></div>
+                                            <div class="item-id">ID: <%= item.unique_id %></div>
+                                        </div>
+                                        <div class="item-status">Available</div>
+                                    </div>
+                                    
+                                    <div class="item-details">
+                                        <div class="item-row">
+                                            <strong>Serial No:</strong>
+                                            <span><%= item.serial_no %></span>
+                                        </div>
+                                        <div class="item-row">
+                                            <strong>Department:</strong>
+                                            <span><%= item.department || item.dept %></span>
+                                        </div>
+                                        <div class="item-row">
+                                            <strong>Hazard Level:</strong>
+                                            <span class="hazard-<%= item.hazard.toLowerCase() %>"><%= item.hazard %></span>
+                                        </div>
+                                        <div class="item-row">
+                                            <strong>Data Sensitivity:</strong>
+                                            <span><%= item.data_sensitivity %></span>
+                                        </div>
+                                        <div class="item-row">
+                                            <strong>Coordinator:</strong>
+                                            <span><%= item.coordinator_name %></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="item-actions">
+                                        <button class="btn btn-primary" onclick="viewItemDetails('<%= item.unique_id %>')">
+                                            <i class="fas fa-eye"></i> View Details
+                                        </button>
+                                        <button class="btn btn-outline" onclick="placeBid('<%= item.id %>', '<%= item.type %>', '<%= item.category %>')">
+                                            <i class="fas fa-gavel"></i> Place Bid
+                                        </button>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <h3>No Items Available</h3>
+                                <p>There are currently no e-waste items available for bidding.</p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Recent Bids -->
+                <div class="content-section">
+                    <div class="section-header">
+                        <h3>Recent Bids</h3>
+                    </div>
+                    <div class="section-content">
+                        <% if (recentBids && recentBids.length > 0) { %>
+                            <div class="recent-bids">
+                                <% recentBids.forEach(bid => { %>
+                                    <div class="bid-item">
+                                        <div class="bid-info">
+                                            <h4><%= bid.type %> - <%= bid.category %></h4>
+                                            <p>ID: <%= bid.unique_id %></p>
+                                            <div class="bid-status status-<%= bid.status %>"><%= bid.status %></div>
+                                        </div>
+                                        <div class="bid-amount">₹<%= bid.bid_amount %></div>
+                                    </div>
+                                <% }); %>
+                            </div>
+                        <% } else { %>
+                            <div class="empty-state">
+                                <i class="fas fa-gavel"></i>
+                                <h4>No Bids Yet</h4>
+                                <p>Your recent bids will appear here</p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="content-section">
+                    <div class="section-header">
+                        <h3>Quick Actions</h3>
+                    </div>
+                    <div class="section-content">
+                        <div style="display: grid; gap: 15px;">
+                            <button class="btn btn-primary" onclick="showProfile()">
+                                <i class="fas fa-user"></i> View Profile
+                            </button>
+                            <a href="/recycler/acquired-items" class="btn btn-outline" style="text-decoration: none; color: #4a7c59;">
+                                <i class="fas fa-shopping-cart"></i> Acquired Items
+                            </a>
+                            <button class="btn btn-outline" onclick="refreshItems()">
+                                <i class="fas fa-refresh"></i> Refresh Items
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Company Info -->
+                <div class="content-section">
+                    <div class="section-header">
+                        <h3>Company Info</h3>
+                    </div>
+                    <div class="section-content">
+                        <div style="font-size: 14px; line-height: 1.6;">
+                            <div style="margin-bottom: 10px;">
+                                <strong>Quantity Permitted:</strong><br>
+                                <span style="color: #2d5a27; font-weight: 600;"><%= recycler.quantity_permitted %> items</span>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <strong>Phone:</strong><br>
+                                <span><%= recycler.phone %></span>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <strong>Status:</strong><br>
+                                <span style="color: <%= recycler.is_verified ? '#2d5a27' : '#856404' %>;">
+                                    <%= recycler.is_verified ? 'Verified' : 'Pending Verification' %>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bid Modal -->
+    <div id="bidModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 400px;">
+            <h3 style="margin-bottom: 20px;">Place Bid</h3>
+            <div id="bidItemInfo" style="background: #f8fafc; padding: 15px; border-radius: 10px; margin-bottom: 20px;"></div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Bid Amount (₹)</label>
+                <input type="number" id="bidAmount" placeholder="Enter your bid amount" 
+                       style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px;">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Message (Optional)</label>
+                <textarea id="bidMessage" placeholder="Add a message with your bid..." 
+                          style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px; min-height: 80px; resize: vertical;"></textarea>
+            </div>
+            
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button onclick="closeBidModal()" style="padding: 10px 20px; border: 2px solid #ccc; background: white; color: #666; border-radius: 8px; cursor: pointer;">Cancel</button>
+                <button onclick="submitBid()" style="padding: 10px 20px; border: none; background: linear-gradient(135deg, #2d5a27, #4a7c59); color: white; border-radius: 8px; cursor: pointer;">Submit Bid</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentItemForBid = null;
+
+// Authentication helper functions
+function getAuthToken() {
+    // Try localStorage first, then sessionStorage, then cookies
+    let token = localStorage.getItem('recyclerToken') || sessionStorage.getItem('recyclerToken');
+    
+    if (!token) {
+        // Try to get from cookies
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const [name, value] = cookie.trim().split('=');
+            if (name === 'recyclerToken') {
+                token = value;
+                break;
+            }
+        }
+    }
+    
+    return token;
+}
+
+function getAuthHeaders() {
+    const token = getAuthToken();
+    return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    };
+}
+
+// API call helper with proper error handling
+async function apiCall(url, options = {}) {
+    try {
+        const response = await fetch(url, {
+            ...options,
+            headers: {
+                ...getAuthHeaders(),
+                ...options.headers
+            }
+        });
+
+        if (response.status === 401) {
+            console.warn('Authentication failed, redirecting to login');
+            window.location.href = '/recycler/login';
+            return null;
+        }
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('API call failed:', error);
+        throw error;
+    }
+}
+
+// Search and filter functionality
+document.getElementById('searchInput').addEventListener('input', filterItems);
+document.getElementById('categoryFilter').addEventListener('change', filterItems);
+document.getElementById('hazardFilter').addEventListener('change', filterItems);
+
+function filterItems() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const categoryFilter = document.getElementById('categoryFilter').value;
+    const hazardFilter = document.getElementById('hazardFilter').value;
+    
+    const items = document.querySelectorAll('.item-card');
+    let visibleCount = 0;
+    
+    items.forEach(item => {
+        const searchText = item.getAttribute('data-search').toLowerCase();
+        const category = item.getAttribute('data-category');
+        const hazard = item.getAttribute('data-hazard');
+        
+        const matchesSearch = searchText.includes(searchTerm);
+        const matchesCategory = !categoryFilter || category === categoryFilter;
+        const matchesHazard = !hazardFilter || hazard === hazardFilter;
+        
+        if (matchesSearch && matchesCategory && matchesHazard) {
+            item.style.display = 'block';
+            visibleCount++;
+        } else {
+            item.style.display = 'none';
+        }
+    });
+    
+    // Update item count
+    document.getElementById('itemCount').textContent = `${visibleCount} items`;
+}
+
+// View item details function
+function viewItemDetails(uniqueId) {
+    // You can either open in a new tab or show a modal
+
+    window.location.href = `/ewaste/item/${uniqueId}`;
+    
+    
+}
+
+// Place bid function
+function placeBid(itemId, itemType, itemCategory) {
+    currentItemForBid = itemId;
+    document.getElementById('bidItemInfo').innerHTML = `
+        <strong>Item:</strong> ${itemType} - ${itemCategory}<br>
+        <strong>Item ID:</strong> ${itemId}
+    `;
+    document.getElementById('bidAmount').value = '';
+    document.getElementById('bidMessage').value = '';
+    document.getElementById('bidModal').style.display = 'flex';
+}
+
+function closeBidModal() {
+    document.getElementById('bidModal').style.display = 'none';
+    currentItemForBid = null;
+}
+
+async function submitBid() {
+    const amount = document.getElementById('bidAmount').value;
+    const message = document.getElementById('bidMessage').value;
+    
+    if (!amount || amount <= 0) {
+        alert('Please enter a valid bid amount');
+        return;
+    }
+    
+    if (!currentItemForBid) {
+        alert('No item selected for bidding');
+        return;
+    }
+    
+    try {
+        const response = await apiCall('/api/bidding/place', {
+            method: 'POST',
+            body: JSON.stringify({
+                itemId: currentItemForBid,
+                bidAmount: parseFloat(amount),
+                notes: message || null
+            })
+        });
+        
+        if (response && response.success) {
+            alert('Bid placed successfully!');
+            closeBidModal();
+            
+            // Update statistics
+            await updateStats();
+            
+            // Refresh the page to show updated data
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } else {
+            throw new Error(response?.message || 'Failed to place bid');
+        }
+    } catch (error) {
+        console.error('Error submitting bid:', error);
+        alert(`Error placing bid: ${error.message}`);
+    }
+}
+
+// Update statistics dynamically
+async function updateStats() {
+    try {
+        const response = await apiCall('/api/bidding/recycler/stats');
+        if (response && response.success) {
+            document.getElementById('totalBidsCount').textContent = response.totalBids;
+            document.getElementById('pendingBidsCount').textContent = response.pendingBids || 0;
+            document.getElementById('acceptedBidsCount').textContent = response.acceptedBids;
+        }
+    } catch (error) {
+        console.error('Error updating stats:', error);
+    }
+}
+
+// Profile management
+async function showProfile() {
+    try {
+        const response = await apiCall('/api/recycler/profile');
+        if (response && response.success) {
+            const recycler = response.data.recycler;
+            const stats = response.data.statistics;
+            
+            alert(`Company: ${recycler.companyName}
+Contact: ${recycler.contactPerson}
+Email: ${recycler.email}
+Phone: ${recycler.phone}
+License: ${recycler.licenseNumber}
+Rating: ${parseFloat(recycler.rating || 0).toFixed(1)}/5.0
+Status: ${recycler.isVerified ? 'Verified' : 'Pending Verification'}
+
+Bidding Statistics:
+Total Bids: ${stats.totalBids}
+Pending: ${stats.pendingBids}
+Accepted: ${stats.acceptedBids}
+Rejected: ${stats.rejectedBids}`);
+        } else {
+            throw new Error(response?.message || 'Failed to fetch profile');
+        }
+    } catch (error) {
+        console.error('Error fetching profile:', error);
+        alert(`Error loading profile: ${error.message}`);
+    }
+}
+
+// Refresh items
+function refreshItems() {
+    window.location.reload();
+}
+
+// Logout functionality
+function handleLogout() {
+    if (confirm('Are you sure you want to logout?')) {
+        // Clear stored tokens
+        localStorage.removeItem('recyclerToken');
+        localStorage.removeItem('recyclerData');
+        sessionStorage.removeItem('recyclerToken');
+        sessionStorage.removeItem('recyclerData');
+        
+        // Clear cookie
+        document.cookie = 'recyclerToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        
+        // Redirect to login
+        const loadingDiv = document.createElement('div');
+                loadingDiv.innerHTML = `
+                    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                                background: rgba(0,0,0,0.8); display: flex; justify-content: center; 
+                                align-items: center; z-index: 9999; color: white; font-size: 18px;">
+                        <div style="text-align: center;">
+                            <div style="margin-bottom: 20px;">🔄 Logging out...</div>
+                            <div style="width: 40px; height: 40px; border: 4px solid #f3f3f3; 
+                                        border-top: 4px solid #3498db; border-radius: 50%; 
+                                        animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                        </div>
+                    </div>
+                    <style>
+                        @keyframes spin {
+                            0% { transform: rotate(0deg); }
+                            100% { transform: rotate(360deg); }
+                        }
+                    </style>
+                `;
+                document.body.appendChild(loadingDiv);
+                
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 1500);
+    }
+}
+
+// Auto-refresh functionality
+let autoRefreshInterval;
+
+function startAutoRefresh() {
+    // Refresh every 2 minutes if page is visible
+    autoRefreshInterval = setInterval(async () => {
+        if (!document.hidden) {
+            try {
+                // Check if there are new items available
+                const response = await apiCall('/api/bidding/items/available');
+                if (response && response.success) {
+                    const currentItemCount = document.querySelectorAll('.item-card').length;
+                    const newItemCount = response.items.length;
+                    
+                    // If item count changed, reload the page
+                    if (newItemCount !== currentItemCount) {
+                        console.log('New items detected, refreshing page...');
+                        window.location.reload();
+                    } else {
+                        // Just update stats
+                        await updateStats();
+                    }
+                }
+            } catch (error) {
+                console.log('Auto-refresh check failed:', error.message);
+            }
+        }
+    }, 120000); // 2 minutes
+}
+
+function stopAutoRefresh() {
+    if (autoRefreshInterval) {
+        clearInterval(autoRefreshInterval);
+        autoRefreshInterval = null;
+    }
+}
+
+// Event listeners for modal
+document.getElementById('bidModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeBidModal();
+    }
+});
+
+// ESC key to close modal
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeBidModal();
+    }
+});
+
+// Page visibility change handler
+document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+        stopAutoRefresh();
+    } else {
+        startAutoRefresh();
+    }
+});
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Dashboard loaded successfully');
+    
+    // Check authentication status
+    const token = getAuthToken();
+    if (!token) {
+        console.warn('No authentication token found, redirecting to login');
+        window.location.href = '/recycler/login';
+        return;
+    }
+    
+    // Start auto-refresh
+    startAutoRefresh();
+    
+    // Update stats on load
+    updateStats();
+    
+    console.log('Auto-refresh and statistics update initialized');
+});
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', function() {
+    stopAutoRefresh();
+});
+
+// Handle form validation for bid amounts
+document.getElementById('bidAmount').addEventListener('input', function(e) {
+    const value = parseFloat(e.target.value);
+    if (value <= 0) {
+        e.target.setCustomValidity('Bid amount must be greater than 0');
+    } else {
+        e.target.setCustomValidity('');
+    }
+});
+    </script>
+</body>
+</html>

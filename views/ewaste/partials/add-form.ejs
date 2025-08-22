@@ -1,0 +1,149 @@
+<div class="p-3">
+    <h5 class="mb-4">
+        <i class="fas fa-plus text-success"></i> Add New E-Waste Item
+    </h5>
+    
+    <% if (message) { %>
+        <div class="alert alert-<%= message.type === 'success' ? 'success' : 'danger' %>" role="alert">
+            <%= message.text %>
+            <% if (message.type === 'success' && message.url) { %>
+                <br><strong>Item URL:</strong> <a href="<%= message.url %>" target="_blank"><%= message.url %></a>
+                <% if (message.qrCode) { %>
+                    <br><br>
+                    <div class="mt-3">
+                        <strong>QR Code Generated:</strong>
+                        <div class="mt-2">
+                            <img src="<%= message.qrCode %>" alt="QR Code" class="img-thumbnail" style="max-width: 200px;">
+                        </div>
+                    </div>
+                <% } %>
+            <% } %>
+        </div>
+    <% } %>
+
+    <form action="/ewaste/submit" method="POST" class="needs-validation" novalidate target="_blank">
+        <!-- Hidden field to pass coordinator info if needed -->
+        <input type="hidden" name="coordinator_id" value="<%= coordinator.id %>">
+        <input type="hidden" name="dept" value="<%= coordinator.department %>">
+        
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="type" class="form-label">Type *</label>
+                <input type="text" class="form-control" id="type" name="type" required
+                       placeholder="e.g., Desktop Computer, Printer, Monitor">
+                <div class="invalid-feedback">Please provide a type.</div>
+            </div>
+            <div class="col-md-6">
+                <label for="serial_no" class="form-label">Serial Number *</label>
+                <input type="text" class="form-control" id="serial_no" name="serial_no" required
+                       placeholder="e.g., ABC123456789">
+                <div class="invalid-feedback">Please provide a serial number.</div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="category" class="form-label">Category *</label>
+                <select class="form-select" id="category" name="category" required>
+                    <option value="">Select Category</option>
+                    <option value="Hardware">Hardware</option>
+                    <option value="Software">Software</option>
+                    <option value="Equipment">Equipment</option>
+                    <option value="Furniture">Furniture</option>
+                    <option value="Other">Other</option>
+                </select>
+                <div class="invalid-feedback">Please select a category.</div>
+            </div>
+            <div class="col-md-6">
+                <label for="hazard" class="form-label">Hazard Level *</label>
+                <select class="form-select" id="hazard" name="hazard" required>
+                    <option value="">Select Hazard Level</option>
+                    <option value="None">None</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                    <option value="Critical">Critical</option>
+                </select>
+                <div class="invalid-feedback">Please select a hazard level.</div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="data_sensitivity" class="form-label">Data Sensitivity *</label>
+                <select class="form-select" id="data_sensitivity" name="data_sensitivity" required>
+                    <option value="">Select Sensitivity Level</option>
+                    <option value="Public">Public</option>
+                    <option value="Internal">Internal</option>
+                    <option value="Confidential">Confidential</option>
+                    <option value="Restricted">Restricted</option>
+                </select>
+                <div class="invalid-feedback">Please select data sensitivity level.</div>
+            </div>
+            <div class="col-md-6">
+                <label for="date_decommissioned" class="form-label">Date Decommissioned (Optional)</label>
+                <input type="date" class="form-control" id="date_decommissioned" name="date_decommissioned">
+                <small class="text-muted">Leave blank if item is still active</small>
+            </div>
+        </div>
+
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            <strong>Department:</strong> <%= coordinator.department %> (Auto-filled from your profile)
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button type="reset" class="btn btn-secondary me-md-2">
+                <i class="fas fa-undo"></i> Reset
+            </button>
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-plus"></i> Add Item
+            </button>
+        </div>
+    </form>
+
+    <div class="mt-4">
+        <div class="row">
+            <div class="col-md-6">
+                <h6><i class="fas fa-lightbulb text-warning"></i> Quick Tips:</h6>
+                <ul class="small text-muted">
+                    <li>Use clear, descriptive item types</li>
+                    <li>Serial numbers should be unique</li>
+                    <li>Set appropriate hazard levels for safety</li>
+                    <li>Consider data sensitivity for security</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h6><i class="fas fa-qrcode text-info"></i> After Adding:</h6>
+                <ul class="small text-muted">
+                    <li>QR code will be auto-generated</li>
+                    <li>Item will appear in your dashboard</li>
+                    <li>You can download QR codes anytime</li>
+                    <li>Item details are accessible via QR scan</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 text-center">
+        <a href="/ewaste/" target="_blank" class="btn btn-outline-primary">
+            <i class="fas fa-external-link-alt"></i> Open Full Form View
+        </a>
+    </div>
+</div>
+
+<script>
+    // Bootstrap form validation
+    (function() {
+        'use strict';
+        const form = document.querySelector('.needs-validation');
+        
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    })();
+</script>

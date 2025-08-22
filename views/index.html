@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Waste Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .header .tagline {
+            font-size: 1rem;
+            color: #888;
+            font-style: italic;
+        }
+
+        /* Main Content Grid */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        /* User Access Section */
+        .user-access {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .user-access h2 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .user-cards {
+            display: grid;
+            gap: 25px;
+        }
+
+        .user-card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8f0fe 100%);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #e1e8ed;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .user-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .user-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .user-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            margin-right: 20px;
+        }
+
+        .user-card-info h3 {
+            color: #333;
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+        }
+
+        .user-card-info p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .user-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f8f9ff;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Leaderboard Section */
+        .leaderboard {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .leaderboard h2 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .leaderboard-container {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px;
+            color: #666;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: #f8f9ff;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .leaderboard-item:hover {
+            transform: translateX(5px);
+            border-color: #667eea;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .rank {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin-right: 20px;
+        }
+
+        .rank-1 {
+            background: linear-gradient(135deg, #ffd700, #ffed4a);
+            color: #b8860b;
+        }
+
+        .rank-2 {
+            background: linear-gradient(135deg, #c0c0c0, #e2e8f0);
+            color: #718096;
+        }
+
+        .rank-3 {
+            background: linear-gradient(135deg, #cd7f32, #d4a574);
+            color: #8b4513;
+        }
+
+        .rank-default {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .department-info {
+            flex: 1;
+        }
+
+        .department-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .department-stats {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .item-count {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-left: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .trophy-icon {
+            font-size: 1.2rem;
+            margin-left: 10px;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+
+        .no-data h3 {
+            margin-bottom: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header {
+                padding: 30px 15px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header p {
+                font-size: 1.1rem;
+            }
+
+            .user-access,
+            .leaderboard {
+                padding: 25px;
+            }
+
+            .user-card {
+                padding: 20px;
+            }
+
+            .user-buttons {
+                flex-direction: column;
+            }
+
+            .user-card-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .user-icon {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        .leaderboard-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .leaderboard-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .leaderboard-container::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .leaderboard-container::-webkit-scrollbar-thumb:hover {
+            background: #5a6fd8;
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-up {
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header fade-in">
+            <h1>E-Waste Management System</h1>
+            <p>Sustainable E-Waste Disposal & Recycling Platform</p>
+            <p class="tagline">Connecting Organizations with Certified Recyclers for a Greener Tomorrow</p>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- User Access Section -->
+            <div class="user-access slide-up">
+                <h2>🚀 Get Started</h2>
+                
+                <!-- Recycler Card -->
+                <div class="user-cards">
+                    <div class="user-card">
+                        <div class="user-card-header">
+                            <div class="user-icon">♻️</div>
+                            <div class="user-card-info">
+                                <h3>Recycler</h3>
+                                <p>Licensed recyclers can browse available e-waste items, place competitive bids, and manage their recycling operations.</p>
+                            </div>
+                        </div>
+                        <div class="user-buttons">
+                            <a href="/recycler/login" class="btn btn-primary">Login</a>
+                            <a href="/recycler/signup" class="btn btn-secondary">Sign Up</a>
+                        </div>
+                    </div>
+
+                    <!-- Coordinator Card -->
+                    <div class="user-card">
+                        <div class="user-card-header">
+                            <div class="user-icon">👨‍💼</div>
+                            <div class="user-card-info">
+                                <h3>Coordinator</h3>
+                                <p>Department coordinators can list e-waste items, manage disposal processes, and review recycler bids.</p>
+                            </div>
+                        </div>
+                        <div class="user-buttons">
+                            <a href="/coordinator/login" class="btn btn-primary">Login</a>
+                            <a href="/coordinator/signup" class="btn btn-secondary">Sign Up</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Section -->
+            <div class="leaderboard slide-up">
+                <h2>🏆 Department Leaderboard</h2>
+                <div id="leaderboard-loading" class="loading">
+                    <div class="loading-spinner"></div>
+                    <span>Loading department statistics...</span>
+                </div>
+                <div id="leaderboard-container" class="leaderboard-container" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load department leaderboard data
+        async function loadLeaderboard() {
+            const loadingDiv = document.getElementById('leaderboard-loading');
+            const containerDiv = document.getElementById('leaderboard-container');
+
+            try {
+                const response = await fetch('/api/leaderboard/departments');
+                const data = await response.json();
+
+                loadingDiv.style.display = 'none';
+                containerDiv.style.display = 'block';
+
+                if (data.success && data.departments.length > 0) {
+                    renderLeaderboard(data.departments);
+                } else {
+                    containerDiv.innerHTML = `
+                        <div class="no-data">
+                            <h3>No Data Available</h3>
+                            <p>No e-waste items have been registered yet.</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading leaderboard:', error);
+                loadingDiv.style.display = 'none';
+                containerDiv.style.display = 'block';
+                containerDiv.innerHTML = `
+                    <div class="no-data">
+                        <h3>Unable to Load Data</h3>
+                        <p>Please try again later.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Render leaderboard
+        function renderLeaderboard(departments) {
+            const container = document.getElementById('leaderboard-container');
+            
+            const leaderboardHtml = departments.map((dept, index) => {
+                const rank = index + 1;
+                let rankClass = 'rank-default';
+                let trophyIcon = '';
+
+                if (rank === 1) {
+                    rankClass = 'rank-1';
+                    trophyIcon = '🏆';
+                } else if (rank === 2) {
+                    rankClass = 'rank-2';
+                    trophyIcon = '🥈';
+                } else if (rank === 3) {
+                    rankClass = 'rank-3';
+                    trophyIcon = '🥉';
+                } else {
+                    trophyIcon = '📊';
+                }
+
+                return `
+                    <div class="leaderboard-item">
+                        <div class="rank ${rankClass}">${rank}</div>
+                        <div class="department-info">
+                            <div class="department-name">${dept.department}</div>
+                            <div class="department-stats">
+                                ${dept.available_items} available • ${dept.sold_items} sold • ${dept.total_items} total
+                            </div>
+                        </div>
+                        <div class="item-count">
+                            ${dept.total_items}
+                            <span class="trophy-icon">${trophyIcon}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = leaderboardHtml;
+
+            // Add fade-in animation to each item
+            const items = container.querySelectorAll('.leaderboard-item');
+            items.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    item.style.transition = 'all 0.5s ease';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadLeaderboard();
+            
+            // Refresh leaderboard every 5 minutes
+            setInterval(loadLeaderboard, 5 * 60 * 1000);
+        });
+
+        // Add click animations to user cards
+        document.querySelectorAll('.user-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recycler Signup - E-Waste Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .signup-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .signup-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #28a745, #20c997, #17a2b8);
+        }
+
+        .signup-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .signup-header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .signup-header p {
+            color: #6c757d;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #28a745;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .license-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid #28a745;
+        }
+
+        .license-title {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sample-licenses {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .license-chip {
+            background: #28a745;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .license-chip:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+
+        .validation-message {
+            margin-top: 8px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .validation-message.success {
+            color: #28a745;
+        }
+
+        .validation-message.error {
+            color: #dc3545;
+        }
+
+        .validation-message.loading {
+            color: #6c757d;
+        }
+
+        .password-strength {
+            margin-top: 8px;
+            font-size: 12px;
+        }
+
+        .strength-weak { color: #dc3545; }
+        .strength-medium { color: #ffc107; }
+        .strength-strong { color: #28a745; }
+
+        .signup-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .signup-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+        }
+
+        .signup-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .login-link a {
+            color: #28a745;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .login-link a:hover {
+            color: #218838;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #28a745;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .signup-container {
+                margin: 10px;
+                padding: 30px 20px;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .sample-licenses {
+                gap: 8px;
+            }
+
+            .license-chip {
+                font-size: 11px;
+                padding: 4px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="signup-header">
+            <h1><i class="fas fa-recycle"></i> Recycler Signup</h1>
+            <p>Join our sustainable e-waste management network</p>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <form id="recyclerSignupForm">
+            <div class="form-group">
+                <label for="contactPerson"><i class="fas fa-user"></i> Contact Person Name *</label>
+                <input type="text" id="contactPerson" name="contactPerson" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email"><i class="fas fa-envelope"></i> Email Address *</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="companyName"><i class="fas fa-building"></i> Company Name *</label>
+                <input type="text" id="companyName" name="companyName" required>
+            </div>
+
+            <div class="license-section">
+                <div class="license-title">
+                    <i class="fas fa-certificate"></i>
+                    Business License Verification
+                </div>
+                <p style="color: #6c757d; font-size: 14px; margin-bottom: 15px;">
+                    Enter your valid business license number. For testing, click any sample license below:
+                </p>
+                <div class="sample-licenses">
+                    <span class="license-chip" onclick="fillLicense('LIC001')">LIC001</span>
+                    <span class="license-chip" onclick="fillLicense('LIC002')">LIC002</span>
+                    <span class="license-chip" onclick="fillLicense('LIC003')">LIC003</span>
+                    <span class="license-chip" onclick="fillLicense('LIC004')">LIC004</span>
+                    <span class="license-chip" onclick="fillLicense('LIC005')">LIC005</span>
+                    <span class="license-chip" onclick="fillLicense('LIC006')">LIC006</span>
+                </div>
+                <div class="form-group">
+                    <label for="licenseNumber">License Number *</label>
+                    <input type="text" id="licenseNumber" name="licenseNumber" required>
+                    <div id="licenseValidation" class="validation-message"></div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="phone"><i class="fas fa-phone"></i> Phone *</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="quantityPermitted"><i class="fas fa-weight"></i> Max Quantity (kg) *</label>
+                    <input type="number" id="quantityPermitted" name="quantityPermitted" min="1" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="address"><i class="fas fa-map-marker-alt"></i> Business Address *</label>
+                <textarea id="address" name="address" rows="3" required placeholder="Enter your complete business address"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="password"><i class="fas fa-lock"></i> Password *</label>
+                <input type="password" id="password" name="password" required>
+                <div id="passwordStrength" class="password-strength"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword"><i class="fas fa-lock"></i> Confirm Password *</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                <div id="passwordMatch" class="validation-message"></div>
+            </div>
+
+            <button type="submit" class="signup-btn" id="submitBtn">
+                <span id="btnText">Create Account</span>
+                <div class="loading-spinner" id="loadingSpinner"></div>
+            </button>
+        </form>
+
+        <div class="login-link">
+            Already have an account? <a href="/recycler/login">Login here</a>
+        </div>
+    </div>
+
+    <script>
+        let licenseValidationTimeout;
+
+        // Fill license number from sample
+        function fillLicense(licenseNumber) {
+            document.getElementById('licenseNumber').value = licenseNumber;
+            // Trigger validation
+            const event = new Event('input', { bubbles: true });
+            document.getElementById('licenseNumber').dispatchEvent(event);
+        }
+
+        // Real-time license validation
+        document.getElementById('licenseNumber').addEventListener('input', function() {
+            const license = this.value.trim();
+            const validationDiv = document.getElementById('licenseValidation');
+            
+            clearTimeout(licenseValidationTimeout);
+            
+            if (license.length === 0) {
+                validationDiv.innerHTML = '';
+                return;
+            }
+
+            // Show loading state
+            validationDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Validating license...';
+            validationDiv.className = 'validation-message loading';
+
+            // Debounce validation
+            licenseValidationTimeout = setTimeout(() => {
+                validateLicense(license);
+            }, 500);
+        });
+
+        async function validateLicense(license) {
+            try {
+                const response = await fetch('/api/recycler/validate-license', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ license_number: license })
+                });
+
+                const data = await response.json();
+                const validationDiv = document.getElementById('licenseValidation');
+
+                if (data.success && data.valid) {
+                    validationDiv.innerHTML = '<i class="fas fa-check-circle"></i> Valid license number';
+                    validationDiv.className = 'validation-message success';
+                } else {
+                    validationDiv.innerHTML = '<i class="fas fa-times-circle"></i> Invalid license number';
+                    validationDiv.className = 'validation-message error';
+                }
+            } catch (error) {
+                console.error('License validation error:', error);
+                const validationDiv = document.getElementById('licenseValidation');
+                validationDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error validating license';
+                validationDiv.className = 'validation-message error';
+            }
+        }
+
+        // Password strength checker
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const strengthDiv = document.getElementById('passwordStrength');
+            
+            if (password.length === 0) {
+                strengthDiv.innerHTML = '';
+                return;
+            }
+
+            let strength = 0;
+            let feedback = [];
+
+            if (password.length >= 8) strength++;
+            else feedback.push('At least 8 characters');
+
+            if (/[A-Z]/.test(password)) strength++;
+            else feedback.push('One uppercase letter');
+
+            if (/[a-z]/.test(password)) strength++;
+            else feedback.push('One lowercase letter');
+
+            if (/[0-9]/.test(password)) strength++;
+            else feedback.push('One number');
+
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            else feedback.push('One special character');
+
+            if (strength < 3) {
+                strengthDiv.innerHTML = `<span class="strength-weak">Weak password. Need: ${feedback.join(', ')}</span>`;
+            } else if (strength < 4) {
+                strengthDiv.innerHTML = `<span class="strength-medium">Medium strength. Consider: ${feedback.join(', ')}</span>`;
+            } else {
+                strengthDiv.innerHTML = `<span class="strength-strong">Strong password!</span>`;
+            }
+        });
+
+        // Password confirmation
+        document.getElementById('confirmPassword').addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = this.value;
+            const matchDiv = document.getElementById('passwordMatch');
+
+            if (confirmPassword.length === 0) {
+                matchDiv.innerHTML = '';
+                return;
+            }
+
+            if (password === confirmPassword) {
+                matchDiv.innerHTML = '<i class="fas fa-check-circle"></i> Passwords match';
+                matchDiv.className = 'validation-message success';
+            } else {
+                matchDiv.innerHTML = '<i class="fas fa-times-circle"></i> Passwords do not match';
+                matchDiv.className = 'validation-message error';
+            }
+        });
+
+        // Form submission
+        document.getElementById('recyclerSignupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+
+            // Validate passwords match
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showAlert('Passwords do not match!', 'error');
+                return;
+            }
+
+            // Show loading state
+            submitBtn.disabled = true;
+            btnText.style.display = 'none';
+            loadingSpinner.style.display = 'inline-block';
+
+            try {
+                const formData = new FormData(this);
+                const data = Object.fromEntries(formData.entries());
+
+                const response = await fetch('/api/recycler/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showAlert('Account created successfully! Redirecting to login...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/recycler/login';
+                    }, 2000);
+                } else {
+                    showAlert(result.message || 'Signup failed. Please try again.', 'error');
+                }
+
+            } catch (error) {
+                console.error('Signup error:', error);
+                showAlert('Network error. Please try again.', 'error');
+            } finally {
+                // Reset loading state
+                submitBtn.disabled = false;
+                btnText.style.display = 'inline';
+                loadingSpinner.style.display = 'none';
+            }
+        });
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertDiv = document.createElement('div');
+            
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                ${message}
+            `;
+            
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alertDiv);
+            alertDiv.style.display = 'flex';
+
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                alertDiv.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

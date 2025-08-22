@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Details - <%= item.unique_id %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .qr-code-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        .detail-card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .detail-row {
+            border-bottom: 1px solid #eee;
+            padding: 12px 0;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .badge-custom {
+            font-size: 0.85em;
+            padding: 6px 12px;
+        }
+        .mobile-friendly {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container mt-4 mobile-friendly">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                
+                <!-- Header Section -->
+                <div class="text-center mb-4">
+                    <h2 class="text-primary">
+                        <i class="fas fa-box"></i> Item Details
+                    </h2>
+                    <p class="text-muted">Scanned from QR Code</p>
+                </div>
+                
+                <!-- Main Item Card -->
+                <div class="card detail-card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-info-circle"></i> 
+                            <%= item.type %> - <%= item.serial_no %>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        
+                        <!-- Unique ID -->
+                        <div class="detail-row row">
+                            <div class="col-4 col-md-3">
+                                <strong><i class="fas fa-fingerprint text-primary"></i> ID:</strong>
+                            </div>
+                            <div class="col-8 col-md-9">
+                                <code class="bg-light p-1 rounded"><%= item.unique_id %></code>
+                            </div>
+                        </div>
+                        
+                        <!-- Type & Department -->
+                        <div class="detail-row row">
+                            <div class="col-4 col-md-3">
+                                <strong><i class="fas fa-tag text-info"></i> Type:</strong>
+                            </div>
+                            <div class="col-8 col-md-9">
+                                <%= item.type %>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-row row">
+                            <div class="col-4 col-md-3">
+                                <strong><i class="fas fa-building text-secondary"></i> Department:</strong>
+                            </div>
+                            <div class="col-8 col-md-9">
+                                <%= item.dept %>
+                            </div>
+                        </div>
+                        
+                        <!-- Serial Number -->
+                        <div class="detail-row row">
+                            <div class="col-4 col-md-3">
+                                <strong><i class="fas fa-barcode text-dark"></i> Serial No:</strong>
+                            </div>
+                            <div class="col-8 col-md-9">
+                                <span class="badge bg-secondary badge-custom"><%= item.serial_no %></span>
+                            </div>
+                        </div>
+                        
+                        <!-- Category -->
+                        <div class="detail-row row">
+                            <div class="col-4 col-md-3">
+                                <strong><i class="fas fa-layer-group text-success"></i> Category:</strong>
+                            </div>
+                            <div class="col-8 col-md-9">
+                                <span class="badge bg-info badge-custom">
+                                    <% if (item.category === 'Hardware') { %>
+                                        <i class="fas fa-microchip"></i>
+                                    <% } else if (item.category === 'Software') { %>
+                                        <i class="fas fa-code"></i>
+                                    <% } else if (item.category === 'Equipment') { %>
+                                        <i class="fas fa-tools"></i>
+                                    <% } else if (item.category === 'Furniture') { %>
+                                        <i class="fas fa-chair"></i>
+                                    <% } else { %>
+                                        <i class="fas fa-cube"></i>
+                                    <% } %>
+                                    <%= item.category %>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <!-- Hazard Level -->
+                        <div class="detail-row row">
+                            <div class="col-4 col-md-3">
+                                <strong><i class="fas fa-exclamation-triangle text-warning"></i> Hazard:</strong>
+                            </div>
+                            <div class="col-8 col-md-9">
+                                <span class="badge badge-custom bg-<%= 
+                                    item.hazard === 'Critical' ? 'danger' :
+                                    item.hazard === 'High' ? 'danger' :
+                                    item.hazard === 'Medium' ? 'warning' :
+                                    item.hazard === 'Low' ? 'info' : 'success' 
+                                %>">
+                                    <% if (item.hazard === 'Critical' || item.hazard === 'High') { %>
+                                        <i class="fas fa-skull-crossbones"></i>
+                                    <% } else if (item.hazard === 'Medium') { %>
+                                        <i class="fas fa-exclamation"></i>
+                                    <% } else if (item.hazard === 'Low') { %>
+                                        <i class="fas fa-info"></i>
+                                    <% } else { %>
+                                        <i class="fas fa-check"></i>
+                                    <% } %>
+                                    <%= item.hazard %>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <!-- Data Sensitivity -->
+                        <div class="detail-row row">
+                            <div class="col-4 col-md-3">
+                                <strong><i class="fas fa-shield-alt text-danger"></i> Data:</strong>
+                            </div>
+                            <div class="col-8 col-md-9">
+                                <span class="badge badge-custom bg-<%= 
+                                    item.data_sensitivity === 'Restricted' ? 'danger' :
+                                    item.data_sensitivity === 'Confidential' ? 'warning' :
+                                    item.data_sensitivity === 'Internal' ? 'info' : 'success' 
+                                %>">
+                                    <% if (item.data_sensitivity === 'Restricted') { %>
+                                        <i class="fas fa-lock"></i>
+                                    <% } else if (item.data_sensitivity === 'Confidential') { %>
+                                        <i class="fas fa-eye-slash"></i>
+                                    <% } else if (item.data_sensitivity === 'Internal') { %>
+                                        <i class="fas fa-users"></i>
+                                    <% } else { %>
+                                        <i class="fas fa-globe"></i>
+                                    <% } %>
+                                    <%= item.data_sensitivity %>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <!-- Decommission Date -->
+                        <div class="detail-row row">
+                            <div class="col-4 col-md-3">
+                                <strong><i class="fas fa-calendar-times text-muted"></i> Decommissioned:</strong>
+                            </div>
+                            <div class="col-8 col-md-9">
+                                <% if (item.date_decommissioned) { %>
+                                    <span class="badge bg-warning text-dark badge-custom">
+                                        <i class="fas fa-calendar"></i>
+                                        <%= new Date(item.date_decommissioned).toLocaleDateString() %>
+                                    </span>
+                                <% } else { %>
+                                    <span class="text-success">
+                                        <i class="fas fa-check-circle"></i> Active
+                                    </span>
+                                <% } %>
+                            </div>
+                        </div>
+                        
+                        <!-- Created Date -->
+                        <div class="detail-row row">
+                            <div class="col-4 col-md-3">
+                                <strong><i class="fas fa-calendar-plus text-success"></i> Created:</strong>
+                            </div>
+                            <div class="col-8 col-md-9">
+                                <%= new Date(item.created_at).toLocaleString() %>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                <!-- QR Code Section -->
+                <% if (item.qr_code_path) { %>
+                <div class="qr-code-section mb-4">
+                    <h5><i class="fas fa-qrcode"></i> QR Code</h5>
+                    <p class="text-muted">Share or print this QR code</p>
+                    
+                    <div class="mb-3">
+                        <img src="<%= item.qr_code_path %>" 
+                             alt="QR Code for <%= item.unique_id %>" 
+                             class="img-fluid"
+                             style="max-width: 200px; border: 2px solid #ddd; border-radius: 8px;">
+                    </div>
+                    
+                    <div class="d-flex flex-column flex-sm-row gap-2 justify-content-center">
+                        <a href="/ewaste/qr/<%= item.unique_id %>/png" 
+                           class="btn btn-primary btn-sm">
+                            <i class="fas fa-download"></i> Download PNG
+                        </a>
+                        <a href="/ewaste/qr/<%= item.unique_id %>/svg" 
+                           class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-download"></i> Download SVG
+                        </a>
+                    </div>
+                    
+                    <small class="text-muted d-block mt-2">
+                        <i class="fas fa-print"></i> Print size: Minimum 30×30mm
+                    </small>
+                </div>
+                <% } %>
+                
+                <!-- Action Buttons -->
+                <div class="text-center mb-4">
+                    <div class="d-flex flex-column flex-sm-row gap-2 justify-content-center">
+                        <a href="/items" class="btn btn-secondary">
+                            <i class="fas fa-list"></i> View All Items
+                        </a>
+                        <a href="/" class="btn btn-success">
+                            <i class="fas fa-plus"></i> Add New Item
+                        </a>
+                        <button onclick="window.print()" class="btn btn-outline-primary">
+                            <i class="fas fa-print"></i> Print Page
+                        </button>
+                        <button onclick="copyToClipboard()" class="btn btn-outline-info">
+                            <i class="fas fa-copy"></i> Copy URL
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Footer Info -->
+                <div class="text-center text-muted">
+                    <small>
+                        <i class="fas fa-mobile-alt"></i> This page is mobile-friendly for easy scanning
+                    </small>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Copy URL to clipboard
+        function copyToClipboard() {
+            navigator.clipboard.writeText(window.location.href).then(function() {
+                // Show success message
+                const btn = event.target;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                btn.classList.remove('btn-outline-info');
+                btn.classList.add('btn-success');
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('btn-success');
+                    btn.classList.add('btn-outline-info');
+                }, 2000);
+            });
+        }
+        
+        // Add print styles
+        window.addEventListener('beforeprint', () => {
+            document.body.style.backgroundColor = 'white';
+        });
+    </script>
+    
+    <style media="print">
+        .btn, .text-center .d-flex {
+            display: none !important;
+        }
+        .container {
+            max-width: 100% !important;
+        }
+        .qr-code-section {
+            background: white !important;
+        }
+    </style>
+</body>
+</html>

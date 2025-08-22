@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add E-Waste Item - E-Waste Management</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .form-header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .form-header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group.readonly input {
+            background-color: #f8f9fa;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .auto-filled {
+            background-color: #e8f5e8 !important;
+            border-color: #4CAF50 !important;
+        }
+
+        .auto-fill-notice {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-notice {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .form-header h1 {
+                font-size: 2rem;
+            }
+
+            .form-container {
+                padding: 25px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-recycle"></i> EcoWaste
+            </div>
+            <div class="nav-links">
+                <a href="/coordinator/dashboard">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="/ewaste/items">
+                    <i class="fas fa-list"></i> View Items
+                </a>
+                <a href="/coordinator/bids">
+                    <i class="fas fa-gavel"></i> Manage Bids
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="form-header">
+            <h1><i class="fas fa-plus-circle"></i> Add E-Waste Item</h1>
+            <p>Register a new e-waste item for disposal</p>
+        </div>
+
+        <div class="form-container">
+            <div class="auto-fill-notice" id="autoFillNotice" style="display: none;">
+                <i class="fas fa-check-circle"></i>
+                <span>Department automatically filled from your profile</span>
+            </div>
+
+            <div class="info-notice">
+                <i class="fas fa-info-circle"></i>
+                <span>Item URL and QR code will be automatically generated after submission</span>
+            </div>
+
+            <form id="ewasteForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="type">Item Type <span class="required">*</span></label>
+                        <select id="type" name="type" required>
+                            <option value="">Select item type</option>
+                            <option value="Computer">Computer</option>
+                            <option value="Laptop">Laptop</option>
+                            <option value="Monitor">Monitor</option>
+                            <option value="Printer">Printer</option>
+                            <option value="Scanner">Scanner</option>
+                            <option value="Smartphone">Smartphone</option>
+                            <option value="Tablet">Tablet</option>
+                            <option value="Server">Server</option>
+                            <option value="Network Equipment">Network Equipment</option>
+                            <option value="UPS">UPS</option>
+                            <option value="Projector">Projector</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dept">Department <span class="required">*</span></label>
+                        <input type="text" id="dept" name="dept" required readonly class="auto-filled">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="serial_no">Serial Number <span class="required">*</span></label>
+                        <input type="text" id="serial_no" name="serial_no" required placeholder="Enter serial number">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Category <span class="required">*</span></label>
+                        <select id="category" name="category" required>
+                            <option value="">Select category</option>
+                            <option value="IT Equipment">IT Equipment</option>
+                            <option value="Communication Device">Communication Device</option>
+                            <option value="Audio/Video">Audio/Video</option>
+                            <option value="Office Equipment">Office Equipment</option>
+                            <option value="Consumer Electronics">Consumer Electronics</option>
+                            <option value="Medical Equipment">Medical Equipment</option>
+                            <option value="Industrial Equipment">Industrial Equipment</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="hazard">Hazard Level <span class="required">*</span></label>
+                        <select id="hazard" name="hazard" required>
+                            <option value="">Select hazard level</option>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                            <option value="Critical">Critical</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="data_sensitivity">Data Sensitivity <span class="required">*</span></label>
+                        <select id="data_sensitivity" name="data_sensitivity" required>
+                            <option value="">Select sensitivity level</option>
+                            <option value="None">None</option>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                            <option value="Confidential">Confidential</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="date_decommissioned">Date Decommissioned</label>
+                    <input type="date" id="date_decommissioned" name="date_decommissioned">
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-plus-circle"></i> Add E-Waste Item
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Auto-fill department from coordinator profile
+        document.addEventListener('DOMContentLoaded', function() {
+            const coordinatorDepartment = localStorage.getItem('coordinatorDepartment');
+            
+            if (coordinatorDepartment) {
+                document.getElementById('dept').value = coordinatorDepartment;
+                document.getElementById('autoFillNotice').style.display = 'flex';
+                console.log('✅ Department auto-filled:', coordinatorDepartment);
+            } else {
+                // If department not in localStorage, try to get it from API
+                fetchCoordinatorDepartment();
+            }
+        });
+
+        // Fetch coordinator department if not in localStorage
+        async function fetchCoordinatorDepartment() {
+            try {
+                const response = await fetch('/api/coordinator/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('coordinatorToken')}`
+                    },
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const department = data.coordinator.department;
+                    document.getElementById('dept').value = department;
+                    localStorage.setItem('coordinatorDepartment', department);
+                    document.getElementById('autoFillNotice').style.display = 'flex';
+                    console.log('✅ Department fetched and auto-filled:', department);
+                }
+            } catch (error) {
+                console.error('Error fetching coordinator department:', error);
+            }
+        }
+
+        // Enhanced form submission
+        document.getElementById('ewasteForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.querySelector('.submit-btn');
+            const originalText = submitBtn.innerHTML;
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding Item...';
+            
+            // Create URL-encoded form data instead of FormData
+            const formParams = new URLSearchParams();
+            formParams.append('type', document.getElementById('type').value);
+            formParams.append('dept', document.getElementById('dept').value);
+            formParams.append('serial_no', document.getElementById('serial_no').value);
+            formParams.append('category', document.getElementById('category').value);
+            formParams.append('hazard', document.getElementById('hazard').value);
+            formParams.append('data_sensitivity', document.getElementById('data_sensitivity').value);
+            formParams.append('date_decommissioned', document.getElementById('date_decommissioned').value);
+            
+            try {
+                const response = await fetch('/ewaste/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formParams.toString(),
+                    credentials: 'include'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showNotification('E-waste item added successfully! QR code generated.', 'success');
+                    
+                    // Reset form but keep department
+                    const dept = document.getElementById('dept').value;
+                    document.getElementById('ewasteForm').reset();
+                    document.getElementById('dept').value = dept;
+                    
+                    // Redirect to dashboard after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = '/coordinator/dashboard';
+                    }, 2000);
+                } else {
+                    showNotification(`Error: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                showNotification('Error adding item. Please try again.', 'error');
+            } finally {
+                // Restore button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        });
+
+        // Show notification function
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                border-radius: 10px;
+                color: white;
+                font-weight: bold;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+                max-width: 300px;
+            `;
+            
+            switch(type) {
+                case 'success':
+                    notification.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+                    break;
+                case 'error':
+                    notification.style.background = 'linear-gradient(135deg, #f44336, #d32f2f)';
+                    break;
+                case 'info':
+                    notification.style.background = 'linear-gradient(135deg, #2196F3, #1976D2)';
+                    break;
+            }
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            // Add CSS animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => notification.remove(), 300);
+            }, 300);
+        }
+    </script>
+</body>
+</html>
